@@ -1,0 +1,32 @@
+import cors from "cors";
+import express from "express";
+import rateLimit from "express-rate-limit";
+import helmet from "helmet";
+import OpError from "./lib/operational-error";
+import globalErrorHandler from "./middlewares/global-error-handler";
+import sanitizeMongoQuery from "./middlewares/sanitize-mongo-queries";
+import bakeryRouter from "./routers/bakery.router";
+import orderRouter from "./routers/order.router";
+import userRouter from "./routers/user.router";
+
+const app = express();
+app.use(helmet());
+const limiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 500,
+  message: "Too many requests made from this IP address, please try again after one hour.",
+  standardHeaders: true,
+});
+app.use(cors({ origin: process.env.CLIENT_HOST }));
+app.options("*", cors());
+app.use("/api", limiter);
+app.use(express.json({ limit: "2mb" }));
+app.use(express.static("public"));
+app.use(sanitizeMongoQuery);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/bakeries", bakeryRouter);
+app.use("/api/v1/orders", orderRouter);
+app.use((req, res, next) => next(new OpError(404, `Can't ${req.method} on ${req.originalUrl}.`)));
+app.use(globalErrorHandler);
+
+export default app;
