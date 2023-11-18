@@ -21,7 +21,6 @@ app.use(cors({ origin: process.env.CLIENT_HOST }));
 app.options("*", cors());
 app.use("/api", limiter);
 app.use(express.json({ limit: "2mb" }));
-app.use(express.static("public"));
 app.use(sanitizeMongoQuery);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/bakeries", bakeryRouter);

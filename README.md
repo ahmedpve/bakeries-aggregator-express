@@ -22,7 +22,8 @@ A REST API for online baking ordering.
 2. MongoDB / Mongoose
 3. TypeScript
 4. `jsonwebtoken` for user authentication
-5. Other packages used for security: `helmet`, `express-rate-limit`, `bcryptjs`, `cors`, `validator`.
+5. Other packages used for security: `helmet`, `express-rate-limit`, `bcryptjs`, `cors`, `validator`
+6. Images are stored on Cloudinary
 
 ## ⚙️ Installation
 
